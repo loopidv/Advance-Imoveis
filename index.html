@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuxeImóveis | Curadoria de Propriedades Exclusivas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@200;300;400;500;600&family=Cormorant:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN SYSTEM
+═══════════════════════════════════════ */
+:root {
+  --ink: #080709;
+  --ink-2: #100F12;
+  --ink-3: #18161B;
+  --ink-4: #221F27;
+  --cream: #F5F0E8;
+  --cream-2: #E8E0D0;
+  --gold: #C4A45A;
+  --gold-2: #DFC07A;
+  --gold-3: #EDD898;
+  --gold-dim: rgba(196,164,90,0.12);
+  --gold-border: rgba(196,164,90,0.22);
+  --white: #FDFBF8;
+  --muted: rgba(245,240,232,0.45);
+  --muted-2: rgba(245,240,232,0.25);
+  --ff-display: 'Bodoni Moda', serif;
+  --ff-body: 'Jost', sans-serif;
+  --ff-italic: 'Cormorant', serif;
+  --ease: cubic-bezier(0.25,0.1,0.25,1);
+  --ease-out: cubic-bezier(0,0,0.2,1);
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+
+body {
+  font-family: var(--ff-body);
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── CURSOR ── */
+#cur, #cur-trail {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+#cur {
+  width: 10px; height: 10px;
+  background: var(--gold);
+  transition: width .25s var(--ease-spring), height .25s var(--ease-spring), background .3s;
+}
+#cur-trail {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(196,164,90,.45);
+  transition: width .35s var(--ease), height .35s var(--ease), border-color .3s;
+}
+body.hov #cur { width: 6px; height: 6px; background: var(--gold-3); }
+body.hov #cur-trail { width: 54px; height: 54px; border-color: var(--gold); }
+body.click #cur { width: 14px; height: 14px; }
+
+/* ── PROGRESS ── */
+#prog {
+  position: fixed; top:0; left:0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-3), var(--gold));
+  z-index: 1000;
+  width: 0%;
+  transition: width .08s linear;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  z-index: 500;
+  padding: 0;
+  transition: all .5s var(--ease);
+}
+nav.solid {
+  background: rgba(8,7,9,0.94);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--gold-border);
+}
+.nav-wrap {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1.6rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-family: var(--ff-display);
+  font-size: 1.75rem;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: .04em;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+.logo em { font-style: italic; color: var(--gold); }
+.logo-creci {
+  font-family: var(--ff-body);
+  font-size: .55rem;
+  letter-spacing: .18em;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: block;
+  margin-top: -2px;
+}
+.nav-links { display: flex; gap: 2.8rem; align-items: center; }
+.nav-links a {
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color .3s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -2px; left:0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width .35s var(--ease-out);
+}
+.nav-links a:hover { color: var(--cream); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  padding: .65rem 1.7rem;
+  text-decoration: none;
+  transition: background .3s, transform .2s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+.nav-cta::before {
+  content:'';
+  position:absolute; inset:0;
+  background: var(--gold-3);
+  transform: translateX(-100%);
+  transition: transform .4s var(--ease-out);
+}
+.nav-cta:hover::before { transform: translateX(0); }
+.nav-cta:hover { transform: translateY(-1px); }
+.nav-cta span { position: relative; z-index: 1; }
+.nav-toggle {
+  display: none;
+  background: none; border: none;
+  color: var(--gold);
+  font-size: 1.4rem;
+  cursor: none;
+}
+
+/* ── MOBILE OVERLAY ── */
+#mob-nav {
+  position: fixed; inset:0;
+  background: rgba(8,7,9,.97);
+  backdrop-filter: blur(20px);
+  z-index: 490;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s;
+}
+#mob-nav.open { opacity: 1; pointer-events: all; }
+#mob-nav a {
+  font-family: var(--ff-display);
+  font-size: 3rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .3s;
+  font-style: italic;
+}
+#mob-nav a:hover { color: var(--gold); }
+#mob-close {
+  position: absolute; top:1.5rem; right:2rem;
+  background: none; border: none;
+  color: var(--muted); font-size: 1.5rem; cursor: none;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.hero-bg {
+  position: absolute; inset:0;
+  background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80') center/cover no-repeat;
+  transform-origin: center;
+  transition: transform 8s ease;
+}
+.hero-bg::after {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(
+    180deg,
+    rgba(8,7,9,.15) 0%,
+    rgba(8,7,9,.3) 40%,
+    rgba(8,7,9,.85) 75%,
+    var(--ink) 100%
+  );
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 4rem 7rem;
+  width: 100%;
+}
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+  animation: slideUp .9s .2s both;
+}
+.hero-kicker::before {
+  content:'';
+  width: 40px; height: 1px;
+  background: var(--gold);
+}
+.hero-kicker span {
+  font-family: var(--ff-body);
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(4rem, 9vw, 9rem);
+  font-weight: 400;
+  line-height: .95;
+  letter-spacing: -.02em;
+  margin-bottom: 2.5rem;
+  animation: slideUp .9s .35s both;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+  display: block;
+}
+.hero-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4rem;
+  align-items: end;
+  animation: slideUp .9s .5s both;
+}
+.hero-desc {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 480px;
+  line-height: 1.8;
+  font-weight: 300;
+}
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.btn-gold {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  padding: 1.1rem 2.8rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s var(--ease-spring);
+}
+.btn-gold::before {
+  content:'';
+  position:absolute; inset:0;
+  background: var(--gold-3);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease-out);
+}
+.btn-gold:hover::before { transform: scaleX(1); }
+.btn-gold:hover { transform: translateY(-2px); }
+.btn-gold span, .btn-gold i { position: relative; z-index:1; }
+.btn-ghost {
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  border: 1px solid rgba(245,240,232,.2);
+  padding: 1.1rem 2.5rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  transition: border-color .3s, color .3s, transform .25s var(--ease-spring);
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.hero-scroll {
+  position: absolute; right:4rem; bottom:7rem; z-index:3;
+  display: flex; flex-direction: column; align-items: center; gap:.6rem;
+  animation: fadeIn 1s 1.2s both;
+}
+.hero-scroll span {
+  font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted-2);
+  writing-mode: vertical-rl;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(var(--gold), transparent);
+  animation: scrollPulse 1.8s infinite;
+}
+@keyframes scrollPulse {
+  0%{transform:scaleY(0);transform-origin:top;opacity:0}
+  50%{transform:scaleY(1);transform-origin:top;opacity:1}
+  100%{transform:scaleY(1);transform-origin:bottom;opacity:0}
+}
+
+/* ── STATS TICKER ── */
+.stats-bar {
+  border-top: 1px solid var(--gold-border);
+  border-bottom: 1px solid var(--gold-border);
+  background: var(--ink-2);
+  position: relative; z-index: 2;
+}
+.stats-row {
+  max-width: 1500px; margin: 0 auto; padding: 0 4rem;
+  display: grid; grid-template-columns: repeat(4,1fr);
+}
+.stat {
+  padding: 2.5rem 2rem;
+  border-right: 1px solid var(--gold-border);
+  text-align: center;
+  position: relative; overflow: hidden;
+  transition: background .4s;
+}
+.stat:last-child { border-right: none; }
+.stat::after {
+  content:'';
+  position:absolute; bottom:0; left:50%;
+  transform: translateX(-50%);
+  width: 0; height: 2px;
+  background: var(--gold);
+  transition: width .4s var(--ease-out);
+}
+.stat:hover { background: rgba(196,164,90,.04); }
+.stat:hover::after { width: 60%; }
+.stat-n {
+  font-family: var(--ff-display);
+  font-size: 3.2rem;
+  font-weight: 400;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+}
+.stat-l {
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: .4rem;
+  display: block;
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap {
+  overflow: hidden;
+  background: var(--gold);
+  padding: .9rem 0;
+  position: relative; z-index: 2;
+}
+.marquee-track {
+  display: flex; gap: 3.5rem;
+  animation: ticker 22s linear infinite;
+  width: max-content;
+}
+.marquee-item {
+  font-family: var(--ff-body);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 1.5rem;
+}
+.marquee-sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(8,7,9,.4); flex-shrink:0; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SECTION COMMON ── */
+section.s { padding: 10rem 0; position: relative; z-index: 2; }
+.wrap { max-width: 1500px; margin: 0 auto; padding: 0 4rem; }
+.s-kicker {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.s-kicker::before {
+  content:''; width: 28px; height: 1px; background: var(--gold);
+}
+.s-kicker span {
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500;
+}
+.s-title {
+  font-family: var(--ff-display);
+  font-size: clamp(2.6rem,4.5vw,4.5rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+}
+.s-title em { font-style: italic; color: var(--gold); }
+
+/* ── LISTINGS ── */
+.listings-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: end;
+  margin-bottom: 4rem;
+}
+.listings-filter {
+  display: flex; gap: .6rem; flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--gold-border);
+  background: transparent;
+  padding: .55rem 1.3rem;
+  cursor: none;
+  transition: all .3s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.5px;
+  background: var(--gold-border);
+  border: 1px solid var(--gold-border);
+}
+.listing-card {
+  background: var(--ink-2);
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* IMAGE AREA */
+.lc-img {
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+.lc-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .8s var(--ease-out), filter .6s;
+  filter: brightness(.92) saturate(.9);
+}
+.listing-card:hover .lc-img img {
+  transform: scale(1.08);
+  filter: brightness(1) saturate(1);
+}
+.lc-badge {
+  position: absolute; top:0; left:0;
+  background: var(--gold); color: var(--ink);
+  font-size: .65rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .4rem .9rem;
+  z-index: 1;
+}
+.lc-badge.rent { background: var(--ink-3); color: var(--gold); border: 1px solid var(--gold); }
+.lc-badge.opp { background: rgba(8,7,9,.8); color: var(--gold-3); border: 1px solid var(--gold-3); }
+.lc-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,7,9,.7) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.listing-card:hover .lc-overlay { opacity: 1; }
+.lc-view {
+  position: absolute; bottom: 1.2rem; left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  background: var(--gold); color: var(--ink);
+  font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  padding: .6rem 1.5rem;
+  transition: all .4s var(--ease-spring);
+  white-space: nowrap;
+  z-index: 2;
+}
+.listing-card:hover .lc-view {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* CARD BODY */
+.lc-body { padding: 2rem 2rem 1.5rem; }
+.lc-loc {
+  font-size: .72rem;
+  letter-spacing: .12em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+.lc-name {
+  font-family: var(--ff-display);
+  font-size: 1.55rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: .4rem;
+  line-height: 1.15;
+  transition: color .3s;
+}
+.listing-card:hover .lc-name { color: var(--gold-2); }
+.lc-price {
+  font-family: var(--ff-display);
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  letter-spacing: -.01em;
+}
+.lc-features {
+  display: flex; gap: 0;
+  border-top: 1px solid rgba(196,164,90,.12);
+  margin: 0 -2rem;
+}
+.lc-feat {
+  flex: 1;
+  padding: 1rem .5rem;
+  text-align: center;
+  border-right: 1px solid rgba(196,164,90,.12);
+  transition: background .3s;
+}
+.lc-feat:last-child { border-right: none; }
+.lc-feat i {
+  font-size: .95rem;
+  color: var(--gold);
+  display: block; margin-bottom: .3rem;
+  transition: transform .3s var(--ease-spring);
+}
+.listing-card:hover .lc-feat i { transform: scale(1.15); }
+.lc-feat span { font-size: .82rem; color: var(--muted); font-weight: 400; }
+
+/* FEATURED CARD (spans 2 cols) */
+.listing-card.featured {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+.listing-card.featured .lc-img { height: 100%; min-height: 360px; }
+.listing-card.featured .lc-body { padding: 3rem; display: flex; flex-direction: column; justify-content: space-between; }
+.listing-card.featured .lc-name { font-size: 2.2rem; }
+.listing-card.featured .lc-price { font-size: 2.4rem; }
+
+/* ── SERVICES / VANTAGENS ── */
+.services-section { background: var(--ink-2); }
+.services-section .s-title { margin-bottom: 4rem; }
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.5px;
+  background: var(--gold-border);
+  border: 1px solid var(--gold-border);
+}
+.svc-card {
+  background: var(--ink-2);
+  padding: 3.5rem 3rem;
+  position: relative; overflow: hidden;
+  transition: background .4s;
+}
+.svc-card::before {
+  content: '';
+  position: absolute; bottom:0; left:0;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transition: width .5s var(--ease-out);
+}
+.svc-card:hover { background: var(--ink-3); }
+.svc-card:hover::before { width: 100%; }
+.svc-num {
+  font-family: var(--ff-display);
+  font-size: 4.5rem;
+  font-weight: 400;
+  color: var(--gold-border);
+  position: absolute; top: 2rem; right: 2.5rem;
+  line-height: 1;
+  transition: color .4s;
+  pointer-events: none;
+}
+.svc-card:hover .svc-num { color: rgba(196,164,90,.25); }
+.svc-icon {
+  width: 52px; height: 52px;
+  border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  transition: all .35s var(--ease-spring);
+  position: relative; z-index:1;
+}
+.svc-card:hover .svc-icon {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+  transform: scale(1.08);
+}
+.svc-title {
+  font-family: var(--ff-display);
+  font-size: 1.55rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: .8rem;
+  line-height: 1.2;
+}
+.svc-desc { font-size: .9rem; color: var(--muted); line-height: 1.8; font-weight: 300; }
+.svc-link {
+  display: inline-flex; align-items: center; gap: .5rem;
+  margin-top: 1.8rem;
+  font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+  position: relative;
+  transition: gap .3s;
+}
+.svc-link::after {
+  content:'';
+  position: absolute; bottom:-2px; left:0;
+  width: 0; height: 1px; background: var(--gold);
+  transition: width .35s;
+}
+.svc-link:hover { gap: .9rem; }
+.svc-link:hover::after { width: 100%; }
+
+/* ── PROCESS / HOW IT WORKS ── */
+.process-section { background: var(--ink); }
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8rem;
+  align-items: start;
+  margin-top: 4rem;
+}
+.process-sticky { position: sticky; top: 8rem; }
+.process-quote {
+  font-family: var(--ff-italic);
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 2rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--gold);
+}
+.steps { display: flex; flex-direction: column; }
+.step {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 2rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--gold-border);
+  cursor: none;
+  transition: padding .3s;
+  position: relative;
+}
+.step:first-child { border-top: 1px solid var(--gold-border); }
+.step::before {
+  content:'';
+  position: absolute; left:0; top:0;
+  width: 2px; height: 0;
+  background: var(--gold);
+  transition: height .5s var(--ease-out);
+}
+.step.act::before { height: 100%; }
+.step-n {
+  font-family: var(--ff-display);
+  font-size: 3rem; font-weight: 400;
+  color: var(--muted-2);
+  transition: color .35s;
+  line-height: 1;
+}
+.step.act .step-n { color: var(--gold); }
+.step-body h3 {
+  font-family: var(--ff-display);
+  font-size: 1.5rem; font-weight: 400;
+  color: var(--cream);
+  margin-bottom: .5rem;
+  transition: color .35s;
+}
+.step.act .step-body h3 { color: var(--gold-2); }
+.step-body p {
+  font-size: .88rem; color: var(--muted);
+  line-height: 1.75; font-weight: 300;
+  max-height: 0; overflow: hidden;
+  transition: max-height .45s var(--ease-out), opacity .3s;
+  opacity: 0;
+}
+.step.act .step-body p { max-height: 200px; opacity: 1; }
+
+/* ── TESTIMONIALS ── */
+.test-section { background: var(--ink-2); }
+.test-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px;
+  background: var(--gold-border); border: 1px solid var(--gold-border);
+  margin-top: 4rem;
+}
+.test-card {
+  background: var(--ink-2);
+  padding: 3rem;
+  position: relative; overflow: hidden;
+  transition: background .4s, transform .4s var(--ease-spring);
+}
+.test-card:hover { background: var(--ink-3); }
+.test-q {
+  font-family: var(--ff-display);
+  font-size: 5rem; font-weight: 400;
+  color: var(--gold-border);
+  line-height: .6;
+  margin-bottom: 1.5rem;
+  transition: color .4s;
+}
+.test-card:hover .test-q { color: rgba(196,164,90,.35); }
+.test-text {
+  font-family: var(--ff-italic);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+.test-stars { display: flex; gap: .3rem; margin-bottom: 1.5rem; }
+.test-stars i { color: var(--gold); font-size: .78rem; }
+.test-author { display: flex; align-items: center; gap: 1rem; }
+.test-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--gold-border);
+  background: var(--ink-3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 1.1rem; color: var(--gold);
+  flex-shrink: 0;
+  transition: border-color .3s;
+}
+.test-card:hover .test-av { border-color: var(--gold); }
+.test-name { font-weight: 600; font-size: .95rem; color: var(--cream); }
+.test-role { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+
+/* ── PROPERTIES HIGHLIGHT ── */
+.highlight-section {
+  background: var(--ink);
+  overflow: hidden;
+}
+.split-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--gold-border);
+  margin-bottom: 1.5px;
+  position: relative;
+  overflow: hidden;
+}
+.split-card:last-child { margin-bottom: 0; }
+.split-img {
+  height: 420px; overflow: hidden; position: relative;
+}
+.split-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .9s var(--ease-out), filter .6s;
+  filter: brightness(.85) saturate(.8);
+}
+.split-card:hover .split-img img {
+  transform: scale(1.06);
+  filter: brightness(1) saturate(1);
+}
+.split-content {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--ink-2);
+  position: relative;
+  overflow: hidden;
+}
+.split-content::after {
+  content: '';
+  position: absolute; inset:0;
+  background: rgba(196,164,90,.03);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.split-card:hover .split-content::after { opacity: 1; }
+.split-tag {
+  font-size: .68rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.split-tag::before { content:''; width:20px; height:1px; background:var(--gold); }
+.split-title {
+  font-family: var(--ff-display);
+  font-size: 2.5rem; font-weight: 400; line-height: 1.1;
+  color: var(--cream); margin-bottom: 1rem;
+}
+.split-desc {
+  font-size: .9rem; color: var(--muted); line-height: 1.8;
+  font-weight: 300; margin-bottom: 2rem;
+}
+.split-price {
+  font-family: var(--ff-display);
+  font-size: 2rem; font-weight: 500;
+  color: var(--gold); margin-bottom: 2rem;
+}
+.split-feats {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.split-feat {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .8rem; color: var(--muted);
+}
+.split-feat i { color: var(--gold); font-size: .85rem; }
+
+/* ── CONTACT / CTA ── */
+.contact-section { background: var(--ink-2); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 6rem;
+  margin-top: 4rem;
+  align-items: start;
+}
+.c-info-title {
+  font-family: var(--ff-display);
+  font-size: 3.5rem; font-weight: 400;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+}
+.c-info-title em { font-style: italic; color: var(--gold); display: block; }
+.c-info-desc {
+  font-size: .95rem; color: var(--muted);
+  line-height: 1.8; font-weight: 300;
+  margin-bottom: 3rem;
+}
+.c-contacts { display: flex; flex-direction: column; gap: .8rem; margin-bottom: 2.5rem; }
+.c-contact-item {
+  display: flex; align-items: center; gap: 1rem;
+  text-decoration: none; color: var(--muted);
+  font-size: .9rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--gold-border);
+  transition: all .3s;
+  position: relative; overflow: hidden;
+}
+.c-contact-item::before {
+  content:'';
+  position:absolute; inset:0;
+  background: rgba(196,164,90,.05);
+  transform: translateX(-100%);
+  transition: transform .4s var(--ease-out);
+}
+.c-contact-item:hover::before { transform: translateX(0); }
+.c-contact-item:hover { border-color: var(--gold); color: var(--cream); }
+.c-contact-item i { color: var(--gold); font-size: 1.1rem; width: 24px; flex-shrink:0; }
+.c-socials { display: flex; gap: .7rem; margin-top: .5rem; }
+.c-social {
+  width: 40px; height: 40px;
+  border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: .95rem;
+  text-decoration: none;
+  transition: all .3s var(--ease-spring);
+}
+.c-social:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); transform: translateY(-3px); }
+
+/* FORM */
+.c-form-wrap {
+  background: var(--ink-3);
+  border: 1px solid var(--gold-border);
+  padding: 3.5rem;
+}
+.c-form-title {
+  font-family: var(--ff-display);
+  font-size: 1.6rem; font-weight: 400;
+  margin-bottom: .5rem;
+}
+.c-form-sub { font-size: .85rem; color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
+.fg { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.2rem; }
+.fl {
+  font-size: .62rem; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.fi, .fs, .fta {
+  background: var(--ink);
+  border: 1px solid rgba(196,164,90,.18);
+  color: var(--cream);
+  font-family: var(--ff-body);
+  font-size: .88rem;
+  font-weight: 300;
+  padding: .85rem 1rem;
+  outline: none;
+  transition: border-color .3s, background .3s;
+  width: 100%;
+}
+.fi:focus, .fs:focus, .fta:focus {
+  border-color: var(--gold);
+  background: rgba(196,164,90,.04);
+}
+.fta { resize: vertical; min-height: 100px; }
+.fs { appearance: none; cursor: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23C4A45A' stroke-width='1.5' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center; background-size: 10px;
+}
+.fs option { background: var(--ink-2); }
+.fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.f-submit {
+  width: 100%;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  font-family: var(--ff-body);
+  font-size: .8rem; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  padding: 1.1rem;
+  cursor: none;
+  display: flex; align-items: center; justify-content: center; gap: .7rem;
+  margin-top: .5rem;
+  position: relative; overflow: hidden;
+  transition: transform .25s var(--ease-spring);
+}
+.f-submit::before {
+  content:'';
+  position:absolute; inset:0;
+  background: var(--gold-3);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s var(--ease-out);
+}
+.f-submit:hover::before { transform: scaleX(1); }
+.f-submit:hover { transform: translateY(-2px); }
+.f-submit span, .f-submit i { position: relative; z-index:1; }
+.f-success {
+  display: none;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.f-success i { font-size: 2.5rem; color: var(--gold); display:block; margin-bottom:.8rem; }
+.f-success p { font-family: var(--ff-display); font-size: 1.6rem; color: var(--cream); margin-bottom: .5rem; }
+.f-success small { color: var(--muted); font-size: .85rem; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  border-top: 1px solid var(--gold-border);
+  position: relative; z-index: 2;
+}
+.footer-main {
+  max-width: 1500px; margin: 0 auto; padding: 5rem 4rem 3rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem;
+}
+.ft-brand { }
+.ft-logo {
+  font-family: var(--ff-display);
+  font-size: 1.8rem; font-weight: 400;
+  color: var(--cream); text-decoration: none;
+}
+.ft-logo em { font-style:italic; color:var(--gold); }
+.ft-tagline { font-size: .82rem; color: var(--muted); margin-top: .6rem; line-height: 1.7; font-weight: 300; }
+.ft-creci { font-size: .65rem; color: var(--muted-2); margin-top: 1rem; letter-spacing: .1em; }
+.ft-col h4 {
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted-2); margin-bottom: 1.5rem;
+}
+.ft-col ul { display: flex; flex-direction: column; gap: .8rem; }
+.ft-col ul a {
+  font-size: .85rem; color: var(--muted); text-decoration: none;
+  transition: color .3s, padding-left .3s;
+  display: block;
+}
+.ft-col ul a:hover { color: var(--gold); padding-left: .3rem; }
+.footer-bottom {
+  max-width: 1500px; margin: 0 auto; padding: 1.5rem 4rem;
+  border-top: 1px solid var(--gold-border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-bottom p { font-size: .75rem; color: var(--muted-2); }
+.footer-bottom a { font-size: .75rem; color: var(--muted-2); text-decoration:none; transition: color .3s; }
+.footer-bottom a:hover { color: var(--gold); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--ink-3); border: 1px solid var(--gold-border);
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; gap: .8rem;
+  z-index: 600;
+  transform: translateX(calc(100% + 3rem));
+  transition: transform .45s var(--ease-spring);
+  max-width: 340px;
+}
+#toast.show { transform: translateX(0); }
+#toast i { color: var(--gold); font-size: 1.1rem; }
+#toast p { font-size: .85rem; color: var(--cream); }
+
+/* ── REVEAL ANIMATIONS ── */
+.rv, .rv-l, .rv-r, .rv-s {
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+}
+.rv { opacity:0; transform:translateY(28px); }
+.rv-l { opacity:0; transform:translateX(-28px); }
+.rv-r { opacity:0; transform:translateX(28px); }
+.rv-s { opacity:0; transform:scale(.97); }
+.rv.vis, .rv-l.vis, .rv-r.vis, .rv-s.vis { opacity:1; transform:none; }
+.d1{transition-delay:.1s} .d2{transition-delay:.2s}
+.d3{transition-delay:.3s} .d4{transition-delay:.4s}
+.d5{transition-delay:.5s} .d6{transition-delay:.6s}
+
+/* ── KEYFRAMES ── */
+@keyframes slideUp { from{opacity:0;transform:translateY(35px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1280px) {
+  .listing-card.featured { grid-column: span 1; display:block; }
+  .listing-card.featured .lc-img { height: 280px; }
+  .listings-grid { grid-template-columns: repeat(2,1fr); }
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .process-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .process-sticky { position: static; }
+}
+@media(max-width:1024px) {
+  .wrap { padding: 0 2.5rem; }
+  .nav-wrap { padding: 1.4rem 2.5rem; }
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+  .hero-content { padding: 0 2.5rem 5rem; }
+  .hero-scroll { display: none; }
+  .stats-row { grid-template-columns: repeat(2,1fr); }
+  .stat:nth-child(2) { border-right: none; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .test-grid { grid-template-columns: 1fr; }
+  .split-card { grid-template-columns: 1fr; }
+  .split-img { height: 280px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media(max-width:768px) {
+  .hero-title { font-size: clamp(3rem,11vw,5rem); }
+  .hero-bottom { grid-template-columns: 1fr; gap: 2rem; }
+  .listings-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: .8rem; text-align: center; }
+  .fg-row { grid-template-columns: 1fr; }
+  section.s { padding: 6rem 0; }
+  .listings-head { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<!-- PROGRESS -->
+<div id="prog"></div>
+
+<!-- MOBILE NAV -->
+<div id="mob-nav">
+  <button id="mob-close"><i class="fa-solid fa-xmark"></i></button>
+  <a href="#inicio" onclick="closeMob()">Início</a>
+  <a href="#imoveis" onclick="closeMob()">Imóveis</a>
+  <a href="#servicos" onclick="closeMob()">Serviços</a>
+  <a href="#processo" onclick="closeMob()">Processo</a>
+  <a href="#contato" onclick="closeMob()">Contato</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-wrap">
+    <a href="#inicio" class="logo">
+      Luxe<em>Imóveis</em>
+      <span class="logo-creci">CRECI/SP 00.000-J</span>
+    </a>
+    <div class="nav-links">
+      <a href="#inicio">Início</a>
+      <a href="#imoveis">Imóveis</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#processo">Processo</a>
+      <a href="#contato">Contato</a>
+    </div>
+    <a href="#contato" class="nav-cta"><span>Consultoria Exclusiva</span></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast">
+  <i class="fa-solid fa-check-circle"></i>
+  <p>Solicitação enviada com sucesso!</p>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="inicio" class="hero">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-kicker">
+      <span>Curadoria de Imóveis de Alto Padrão — São Paulo & Brasil</span>
+    </div>
+    <h1 class="hero-title">
+      Patrimônio que<br>
+      <em>transcende</em>
+      o ordinário.
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        Conectamos você às propriedades mais exclusivas do mercado, com atendimento discreto, inteligência de investimento e acesso privilegiado a ofertas off-market.
+      </p>
+      <div class="hero-actions">
+        <a href="#imoveis" class="btn-gold"><span>Ver Propriedades</span> <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#contato" class="btn-ghost">Consultoria <i class="fa-solid fa-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mtrack">
+    <span class="marquee-item">Propriedades Exclusivas <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Acesso Off-Market <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Consultoria Estratégica <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Due Diligence Jurídica <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Gestão de Patrimônio <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Atendimento Discreto <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Investimento de Alto Padrão <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Propriedades Exclusivas <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Acesso Off-Market <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Consultoria Estratégica <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Due Diligence Jurídica <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Gestão de Patrimônio <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Atendimento Discreto <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Investimento de Alto Padrão <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+<!-- ══════════ STATS ══════════ -->
+<div class="stats-bar">
+  <div class="stats-row">
+    <div class="stat rv"><span class="stat-n" data-t="840" data-s="+">0</span><span class="stat-l">Propriedades Negociadas</span></div>
+    <div class="stat rv d2"><span class="stat-n" data-t="18" data-s="">0</span><span class="stat-l">Anos de Mercado</span></div>
+    <div class="stat rv d3"><span class="stat-n" data-t="4" data-s=".2B">0</span><span class="stat-l">Em Volume Transacionado (R$)</span></div>
+    <div class="stat rv d4"><span class="stat-n" data-t="97" data-s="%">0</span><span class="stat-l">Índice de Satisfação</span></div>
+  </div>
+</div>
+
+<!-- ══════════ LISTINGS ══════════ -->
+<section id="imoveis" class="s" style="background:var(--ink);">
+  <div class="wrap">
+    <div class="listings-head">
+      <div>
+        <div class="s-kicker rv"><span>Catálogo Curado</span></div>
+        <h2 class="s-title rv d1">Propriedades em <em>Destaque</em></h2>
+      </div>
+      <div class="listings-filter rv d2">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="venda">Venda</button>
+        <button class="filter-btn" data-filter="aluguel">Aluguel</button>
+        <button class="filter-btn" data-filter="oportunidade">Oportunidade</button>
+      </div>
+    </div>
+    <div class="listings-grid rv-s d1">
+      <!-- FEATURED (2 cols) -->
+      <a href="#contato" class="listing-card featured" data-cat="venda">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80" alt="Mansão Infinity">
+          <span class="lc-badge">Venda Exclusiva</span>
+          <div class="lc-overlay"></div>
+          <div class="lc-view">Ver Detalhes</div>
+        </div>
+        <div class="lc-body">
+          <div>
+            <div class="lc-loc"><i class="fa-solid fa-location-dot"></i> Jardins, São Paulo</div>
+            <h3 class="lc-name">Residência 'Infinity'</h3>
+            <div class="lc-price">R$ 28.500.000</div>
+            <p style="font-size:.88rem;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:1.5rem;">Obra arquitetônica assinada com vistas panorâmicas, piscina borda infinita e tecnologia domótica integrada em cada ambiente.</p>
+          </div>
+          <div class="lc-features" style="margin:0;border-top:1px solid rgba(196,164,90,.12);">
+            <div class="lc-feat" style="padding:1rem .8rem;">
+              <i class="fa-solid fa-bed"></i><span>6 Suítes</span>
+            </div>
+            <div class="lc-feat" style="padding:1rem .8rem;">
+              <i class="fa-solid fa-bath"></i><span>8 Banheiros</span>
+            </div>
+            <div class="lc-feat" style="padding:1rem .8rem;">
+              <i class="fa-solid fa-car"></i><span>4 Vagas</span>
+            </div>
+            <div class="lc-feat" style="padding:1rem .8rem;">
+              <i class="fa-solid fa-ruler-combined"></i><span>2.200 m²</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <!-- CARD 1 -->
+      <a href="#contato" class="listing-card" data-cat="aluguel">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80" alt="Cobertura">
+          <span class="lc-badge rent">Locação</span>
+          <div class="lc-overlay"></div>
+          <div class="lc-view">Ver Detalhes</div>
+        </div>
+        <div class="lc-body">
+          <div class="lc-loc"><i class="fa-solid fa-location-dot"></i> Balneário Camboriú, SC</div>
+          <h3 class="lc-name">Cobertura Frente Mar</h3>
+          <div class="lc-price">R$ 52.000<span style="font-size:.9rem;font-family:var(--ff-body);font-weight:300">/mês</span></div>
+          <div class="lc-features">
+            <div class="lc-feat"><i class="fa-solid fa-bed"></i><span>4 Suítes</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-bath"></i><span>5 Banheiros</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-ruler-combined"></i><span>620 m²</span></div>
+          </div>
+        </div>
+      </a>
+      <!-- CARD 2 -->
+      <a href="#contato" class="listing-card" data-cat="oportunidade">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=700&q=80" alt="Haras">
+          <span class="lc-badge opp">Oportunidade</span>
+          <div class="lc-overlay"></div>
+          <div class="lc-view">Ver Detalhes</div>
+        </div>
+        <div class="lc-body">
+          <div class="lc-loc"><i class="fa-solid fa-location-dot"></i> Interior de Minas Gerais</div>
+          <h3 class="lc-name">Haras Exclusive</h3>
+          <div class="lc-price">R$ 42.000.000</div>
+          <div class="lc-features">
+            <div class="lc-feat"><i class="fa-solid fa-bed"></i><span>10 Quartos</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-tree"></i><span>50 ha</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-horse"></i><span>Haras</span></div>
+          </div>
+        </div>
+      </a>
+      <!-- CARD 3 -->
+      <a href="#contato" class="listing-card" data-cat="venda">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80" alt="Penthouse">
+          <span class="lc-badge">Venda</span>
+          <div class="lc-overlay"></div>
+          <div class="lc-view">Ver Detalhes</div>
+        </div>
+        <div class="lc-body">
+          <div class="lc-loc"><i class="fa-solid fa-location-dot"></i> Vila Nova Conceição, SP</div>
+          <h3 class="lc-name">Penthouse 'Altitude'</h3>
+          <div class="lc-price">R$ 14.700.000</div>
+          <div class="lc-features">
+            <div class="lc-feat"><i class="fa-solid fa-bed"></i><span>4 Suítes</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-bath"></i><span>5 Banheiros</span></div>
+            <div class="lc-feat"><i class="fa-solid fa-ruler-combined"></i><span>480 m²</span></div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FEATURED SPLIT ══════════ -->
+<section class="s highlight-section" id="destaques">
+  <div class="wrap">
+    <div class="s-kicker rv"><span>Curadoria Especial</span></div>
+    <h2 class="s-title rv d1" style="margin-bottom:3rem;">Seleção <em>off-market</em></h2>
+    <div class="rv-s d2">
+      <div class="split-card">
+        <div class="split-img">
+          <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=900&q=80" alt="Villa">
+        </div>
+        <div class="split-content">
+          <div>
+            <div class="split-tag">Exclusivo Off-Market · Venda</div>
+            <h3 class="split-title">Villa Serena<br>Riviera de São Lourenço</h3>
+            <p class="split-desc">Propriedade única com acesso privativo à praia, projeto assinado por escritório internacional. Disponível apenas para clientes qualificados da carteira exclusiva.</p>
+            <div class="split-price">R$ 19.900.000</div>
+            <div class="split-feats">
+              <span class="split-feat"><i class="fa-solid fa-bed"></i> 5 Suítes</span>
+              <span class="split-feat"><i class="fa-solid fa-water"></i> Acesso ao Mar</span>
+              <span class="split-feat"><i class="fa-solid fa-ruler-combined"></i> 900 m²</span>
+              <span class="split-feat"><i class="fa-solid fa-umbrella-beach"></i> Piscina Borda</span>
+            </div>
+          </div>
+          <a href="#contato" class="btn-gold" style="align-self:flex-start"><span>Solicitar Acesso</span> <i class="fa-solid fa-lock-open"></i></a>
+        </div>
+      </div>
+      <div class="split-card" style="margin-top:1.5px;">
+        <div class="split-content" style="order:-1;">
+          <div>
+            <div class="split-tag">Investimento · Alto Rendimento</div>
+            <h3 class="split-title">Complexo Empresarial<br>Faria Lima, São Paulo</h3>
+            <p class="split-desc">Ativo comercial de alto padrão com ocupação garantida e contratos de longo prazo. Cap rate de 8,5% a.a. com potencial de valorização significativo.</p>
+            <div class="split-price">R$ 88.000.000</div>
+            <div class="split-feats">
+              <span class="split-feat"><i class="fa-solid fa-building"></i> 12 Andares</span>
+              <span class="split-feat"><i class="fa-solid fa-chart-line"></i> 8.5% Cap Rate</span>
+              <span class="split-feat"><i class="fa-solid fa-ruler-combined"></i> 4.800 m²</span>
+              <span class="split-feat"><i class="fa-solid fa-users"></i> 3 Locatários AAA</span>
+            </div>
+          </div>
+          <a href="#contato" class="btn-gold" style="align-self:flex-start"><span>Análise de Investimento</span> <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="split-img">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80" alt="Comercial">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES ══════════ -->
+<section id="servicos" class="s services-section">
+  <div class="wrap">
+    <div class="s-kicker rv"><span>Serviços Premium</span></div>
+    <h2 class="s-title rv d1" style="margin-bottom:4rem;">Mais que uma <em>imobiliária.</em></h2>
+    <div class="services-grid">
+      <div class="svc-card rv">
+        <span class="svc-num">01</span>
+        <div class="svc-icon"><i class="fa-solid fa-user-tie"></i></div>
+        <h3 class="svc-title">Consultoria de Investimento</h3>
+        <p class="svc-desc">Análise aprofundada de mercado, modelagem financeira e estratégia de alocação patrimonial para maximizar retornos no setor imobiliário de luxo.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-card rv d2">
+        <span class="svc-num">02</span>
+        <div class="svc-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3 class="svc-title">Due Diligence Jurídica</h3>
+        <p class="svc-desc">Processo de compra e venda com total segurança. Nossa equipe jurídica cuida de toda a documentação, registros e conformidade regulatória.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-card rv d3">
+        <span class="svc-num">03</span>
+        <div class="svc-icon"><i class="fa-solid fa-key"></i></div>
+        <h3 class="svc-title">Acesso Off-Market</h3>
+        <p class="svc-desc">Propriedades que jamais são divulgadas publicamente — disponíveis exclusivamente à nossa carteira selecionada de compradores e investidores.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-card rv d1">
+        <span class="svc-num">04</span>
+        <div class="svc-icon"><i class="fa-solid fa-globe"></i></div>
+        <h3 class="svc-title">Rede Internacional</h3>
+        <p class="svc-desc">Acesso a propriedades em Portugal, Miami, Lisboa, Milão e Dubai. Assessoria completa em transações internacionais com suporte jurídico local.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-card rv d2">
+        <span class="svc-num">05</span>
+        <div class="svc-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h3 class="svc-title">Gestão de Ativos</h3>
+        <p class="svc-desc">Administração completa do seu portfólio imobiliário — da manutenção à locação, com relatórios mensais de performance e valorização.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-card rv d3">
+        <span class="svc-num">06</span>
+        <div class="svc-icon"><i class="fa-solid fa-handshake"></i></div>
+        <h3 class="svc-title">Negociação Exclusiva</h3>
+        <p class="svc-desc">Representação total dos seus interesses na negociação. Utilizamos inteligência de mercado para garantir as melhores condições possíveis.</p>
+        <a href="#contato" class="svc-link">Saiba Mais <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROCESS ══════════ -->
+<section id="processo" class="s process-section">
+  <div class="wrap">
+    <div class="process-grid">
+      <div class="process-sticky">
+        <div class="s-kicker rv-l"><span>Nossa Metodologia</span></div>
+        <h2 class="s-title rv-l d1">Como <em>encontramos</em> seu imóvel ideal.</h2>
+        <p class="process-quote rv-l d2">
+          "Cada cliente tem uma visão única de patrimônio. Nossa missão é torná-la realidade com precisão e discrição."
+        </p>
+        <a href="#contato" class="btn-gold rv-l d3" style="display:inline-flex;margin-top:2.5rem;"><span>Iniciar Processo</span> <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="steps rv-r d1">
+        <div class="step act" data-s="0">
+          <div class="step-n">01</div>
+          <div class="step-body">
+            <h3>Entrevista de Perfil</h3>
+            <p>Sessão confidencial para compreender seus objetivos, restrições e visão patrimonial. Quanto mais conhecemos você, mais precisa é a nossa curadoria.</p>
+          </div>
+        </div>
+        <div class="step" data-s="1">
+          <div class="step-n">02</div>
+          <div class="step-body">
+            <h3>Curadoria Personalizada</h3>
+            <p>Seleção rigorosa das propriedades que atendem ao seu perfil — incluindo imóveis off-market e oportunidades não divulgadas ao mercado geral.</p>
+          </div>
+        </div>
+        <div class="step" data-s="2">
+          <div class="step-n">03</div>
+          <div class="step-body">
+            <h3>Análise & Due Diligence</h3>
+            <p>Avaliação técnica, jurídica e financeira completa de cada opção apresentada. Sua segurança é garantida antes de qualquer decisão.</p>
+          </div>
+        </div>
+        <div class="step" data-s="3">
+          <div class="step-n">04</div>
+          <div class="step-body">
+            <h3>Negociação & Fechamento</h3>
+            <p>Conduzimos a negociação em seu nome com autoridade e transparência. Do contrato ao registro, acompanhamos cada etapa até a entrega das chaves.</p>
+          </div>
+        </div>
+        <div class="step" data-s="4">
+          <div class="step-n">05</div>
+          <div class="step-body">
+            <h3>Suporte Pós-Venda</h3>
+            <p>O relacionamento não termina com a assinatura. Oferecemos gestão do ativo, acompanhamento de valorização e suporte contínuo por toda a vida do investimento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<section class="s test-section">
+  <div class="wrap">
+    <div class="s-kicker rv"><span>Depoimentos</span></div>
+    <h2 class="s-title rv d1">Clientes que <em>confiam.</em></h2>
+    <div class="test-grid">
+      <div class="test-card rv d1">
+        <div class="test-q">"</div>
+        <div class="test-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="test-text">A LuxeImóveis nos apresentou uma propriedade off-market que jamais teríamos encontrado por conta própria. O processo foi impecável do início ao fim, com um nível de discrição que é raro no mercado.</p>
+        <div class="test-author">
+          <div class="test-av">R</div>
+          <div>
+            <div class="test-name">Roberto & Claudia Mendes</div>
+            <div class="test-role">Empresários — Adquiriram Residência em Jardins</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card rv d2">
+        <div class="test-q">"</div>
+        <div class="test-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="test-text">Meu portfólio imobiliário triplicou em valor nos últimos 5 anos sob orientação da LuxeImóveis. A análise de mercado que eles fornecem é de um nível institucional, não se encontra em outro lugar.</p>
+        <div class="test-author">
+          <div class="test-av">A</div>
+          <div>
+            <div class="test-name">Alexandre Figueiredo</div>
+            <div class="test-role">Investidor — Portfólio de R$ 40M+</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card rv d3">
+        <div class="test-q">"</div>
+        <div class="test-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="test-text">Vendi minha propriedade acima do valor de avaliação graças à estratégia de posicionamento da equipe. Em menos de 45 dias, fechamento com comprador qualificado sem nenhuma exposição pública.</p>
+        <div class="test-author">
+          <div class="test-av">M</div>
+          <div>
+            <div class="test-name">Marina Cavalcante</div>
+            <div class="test-role">Vendedora — Penthouse Itaim Bibi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contato" class="s contact-section">
+  <div class="wrap">
+    <div class="s-kicker rv"><span>Fale Conosco</span></div>
+    <div class="contact-grid">
+      <div class="rv-l">
+        <h2 class="c-info-title">Comece sua jornada <em>agora.</em></h2>
+        <p class="c-info-desc">Atendimento exclusivo, discreto e personalizado. Um de nossos consultores seniores responderá em até 2 horas úteis com uma proposta inicial alinhada ao seu perfil.</p>
+        <div class="c-contacts">
+          <a href="tel:+5511987654321" class="c-contact-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <div style="font-weight:600;font-size:.9rem;color:var(--cream)">+55 (11) 98765-4321</div>
+              <div style="font-size:.78rem;color:var(--muted)">Seg–Sex 9h às 19h · Sáb 10h às 15h</div>
+            </div>
+          </a>
+          <a href="https://wa.me/5511987654321" class="c-contact-item" target="_blank" rel="noopener">
+            <i class="fa-brands fa-whatsapp" style="color:#25D366"></i>
+            <div>
+              <div style="font-weight:600;font-size:.9rem;color:var(--cream)">WhatsApp Exclusivo</div>
+              <div style="font-size:.78rem;color:var(--muted)">Resposta em minutos</div>
+            </div>
+          </a>
+          <a href="mailto:exclusivo@luxeimoveis.com.br" class="c-contact-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <div style="font-weight:600;font-size:.9rem;color:var(--cream)">exclusivo@luxeimoveis.com.br</div>
+              <div style="font-size:.78rem;color:var(--muted)">Para solicitações formais e NDA</div>
+            </div>
+          </a>
+          <a href="#" class="c-contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <div style="font-weight:600;font-size:.9rem;color:var(--cream)">Av. Brigadeiro Faria Lima, 3144</div>
+              <div style="font-size:.78rem;color:var(--muted)">Itaim Bibi, São Paulo — SP</div>
+            </div>
+          </a>
+        </div>
+        <div class="c-socials">
+          <a href="#" class="c-social" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="c-social" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="c-social" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="c-social" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="rv-r d1">
+        <div class="c-form-wrap">
+          <h3 class="c-form-title">Agende sua Consultoria</h3>
+          <p class="c-form-sub">Todas as informações tratadas com total confidencialidade.</p>
+          <form id="main-form" onsubmit="submitForm(event)">
+            <div class="fg-row">
+              <div class="fg">
+                <label class="fl">Nome Completo</label>
+                <input type="text" class="fi" placeholder="Seu nome" required>
+              </div>
+              <div class="fg">
+                <label class="fl">Empresa</label>
+                <input type="text" class="fi" placeholder="Opcional">
+              </div>
+            </div>
+            <div class="fg-row">
+              <div class="fg">
+                <label class="fl">E-mail</label>
+                <input type="email" class="fi" placeholder="seu@email.com" required>
+              </div>
+              <div class="fg">
+                <label class="fl">Telefone / WhatsApp</label>
+                <input type="tel" class="fi" placeholder="(11) 9 0000-0000">
+              </div>
+            </div>
+            <div class="fg">
+              <label class="fl">Objetivo Principal</label>
+              <select class="fs" required>
+                <option value="" disabled selected>Selecione sua intenção</option>
+                <option>Comprar Imóvel Residencial</option>
+                <option>Comprar Imóvel Comercial</option>
+                <option>Vender Propriedade</option>
+                <option>Investimento & Renda</option>
+                <option>Acesso Off-Market</option>
+                <option>Consultoria Patrimonial</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label class="fl">Faixa de Investimento (R$)</label>
+              <select class="fs">
+                <option value="" disabled selected>Selecione a faixa</option>
+                <option>Até R$ 5 milhões</option>
+                <option>R$ 5M – R$ 15M</option>
+                <option>R$ 15M – R$ 50M</option>
+                <option>R$ 50M – R$ 100M</option>
+                <option>Acima de R$ 100M</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label class="fl">Mensagem</label>
+              <textarea class="fta" placeholder="Descreva brevemente sua necessidade ou propriedade de interesse..."></textarea>
+            </div>
+            <button type="submit" class="f-submit">
+              <span>Enviar Solicitação</span> <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
+          <div class="f-success" id="f-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <p>Solicitação recebida!</p>
+            <small>Um consultor senior entrará em contato em até 2 horas úteis.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-main">
+    <div class="ft-brand">
+      <a href="#" class="ft-logo">Luxe<em>Imóveis</em></a>
+      <p class="ft-tagline">Curadoria de propriedades exclusivas para quem valoriza patrimônio, privacidade e excelência em cada detalhe.</p>
+      <p class="ft-creci">CRECI/SP 00.000-J · COFECI 00.000-F</p>
+    </div>
+    <div class="ft-col">
+      <h4>Imóveis</h4>
+      <ul>
+        <li><a href="#imoveis">Destaques</a></li>
+        <li><a href="#destaques">Off-Market</a></li>
+        <li><a href="#imoveis">Residenciais</a></li>
+        <li><a href="#imoveis">Comerciais</a></li>
+        <li><a href="#imoveis">Investimento</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Serviços</h4>
+      <ul>
+        <li><a href="#servicos">Consultoria</a></li>
+        <li><a href="#servicos">Due Diligence</a></li>
+        <li><a href="#servicos">Gestão de Ativos</a></li>
+        <li><a href="#servicos">Rede Internacional</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Contato</h4>
+      <ul>
+        <li><a href="tel:+5511987654321">(11) 98765-4321</a></li>
+        <li><a href="mailto:exclusivo@luxeimoveis.com.br">exclusivo@luxeimoveis.com.br</a></li>
+        <li><a href="#">Av. Faria Lima, 3144 — SP</a></li>
+        <li><a href="#">Seg–Sex 9h–19h</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 LuxeImóveis. Todos os direitos reservados.</p>
+    <div style="display:flex;gap:2rem;">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos de Uso</a>
+      <a href="#">LGPD</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const trail = document.getElementById('cur-trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+document.addEventListener('mousedown', () => document.body.classList.add('click'));
+document.addEventListener('mouseup', () => document.body.classList.remove('click'));
+(function animTrail(){
+  tx += (mx-tx)*.1; ty += (my-ty)*.1;
+  trail.style.left=tx+'px'; trail.style.top=ty+'px';
+  requestAnimationFrame(animTrail);
+})();
+document.querySelectorAll('a,button,.listing-card,.svc-card,.test-card,.step,.stat,.filter-btn,.c-contact-item,.c-social,.split-card,.lc-feat').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hov'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
+});
+
+// ── NAV ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 40);
+  // progress bar
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+});
+
+// ── MOBILE NAV ──
+document.getElementById('nav-toggle').addEventListener('click', () => document.getElementById('mob-nav').classList.add('open'));
+document.getElementById('mob-close').addEventListener('click', closeMob);
+function closeMob(){ document.getElementById('mob-nav').classList.remove('open'); }
+
+// ── HERO PARALLAX ──
+const heroBg = document.getElementById('hero-bg');
+window.addEventListener('scroll', () => {
+  if(window.scrollY < window.innerHeight){
+    heroBg.style.transform = `translateY(${window.scrollY * 0.35}px) scale(1.05)`;
+  }
+});
+
+// ── SCROLL REVEAL ──
+const revEls = document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-s');
+new IntersectionObserver((entries, obs) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); }
+  });
+}, { threshold:.1, rootMargin:'0px 0px -50px 0px' }).observe ? 
+  revEls.forEach(el => new IntersectionObserver((entries,obs)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -50px 0px'}).observe(el)) : null;
+
+// Fix: single observer for all
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('vis'); ro.unobserve(e.target); } });
+}, { threshold:.08, rootMargin:'0px 0px -40px 0px' });
+revEls.forEach(el => ro.observe(el));
+
+// ── COUNTERS ──
+const counters = document.querySelectorAll('.stat-n');
+let counted = false;
+const co = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !counted){
+      counted=true;
+      counters.forEach(el=>{
+        const t=+el.dataset.t, s=el.dataset.s||'';
+        let v=0; const step=t/(2400/16);
+        const tick=()=>{
+          v+=step;
+          if(v<t){ el.textContent=Math.ceil(v)+s; requestAnimationFrame(tick); }
+          else { el.textContent=t+s; }
+        };
+        tick();
+      });
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.stat').forEach(el=>co.observe(el));
+
+// ── PROCESS ACCORDION ──
+const steps = document.querySelectorAll('.step');
+steps.forEach(s=>{
+  s.addEventListener('click',()=>{
+    steps.forEach(x=>x.classList.remove('act'));
+    s.classList.add('act');
+  });
+});
+let si=0;
+setInterval(()=>{
+  steps.forEach(x=>x.classList.remove('act'));
+  si=(si+1)%steps.length;
+  steps[si].classList.add('act');
+},4500);
+
+// ── FILTER ──
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.listing-card').forEach(card=>{
+      const cat=card.dataset.cat||'all';
+      if(f==='all'||cat===f){
+        card.style.display=''; card.style.opacity='0'; card.style.transform='translateY(10px)';
+        setTimeout(()=>{ card.style.transition='opacity .4s, transform .4s'; card.style.opacity='1'; card.style.transform='translateY(0)'; },20);
+      } else {
+        card.style.opacity='0'; card.style.transform='translateY(8px)';
+        setTimeout(()=>{ card.style.display='none'; },400);
+      }
+    });
+  });
+});
+
+// ── FORM ──
+function submitForm(e){
+  e.preventDefault();
+  const btn = e.target.querySelector('.f-submit');
+  btn.innerHTML = '<span>Enviando...</span>';
+  btn.disabled = true;
+  setTimeout(()=>{
+    document.getElementById('main-form').style.display='none';
+    document.getElementById('f-success').style.display='block';
+    showToast('Solicitação enviada! Retornaremos em breve.');
+  },1400);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.querySelector('p').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4500);
+}
+
+// ── SMOOTH ANCHORS ──
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const tgt=document.querySelector(a.getAttribute('href'));
+    if(tgt){ e.preventDefault(); tgt.scrollIntoView({behavior:'smooth',block:'start'}); closeMob(); }
+  });
+});
+
+// Tiny hero zoom on load
+window.addEventListener('load',()=>{
+  const bg = document.getElementById('hero-bg');
+  bg.style.transition = 'transform 8s ease';
+  bg.style.transform = 'scale(1.05)';
+  setTimeout(()=>{ bg.style.transform = 'translateY(0) scale(1.05)'; },100);
+});
+</script>
+</body>
+</html>
